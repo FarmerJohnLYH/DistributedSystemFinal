@@ -1,0 +1,47 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+// 忽略所有警告
+
+package pubsub;
+
+// 消息定义
+message Message {
+  string content = 1;
+  string sender_id = 2;
+}
+
+// 发布请求
+message PublishRequest {
+  string topic = 1;
+  Message message = 2;
+  string sender_id = 3;
+}
+
+// 订阅请求
+message SubscribeRequest {
+  string subscriber_id = 1;
+  string topic = 2;
+}
+
+// 消息响应
+message MessageResponse {
+  Message message = 1;
+}
+
+message Empty {}
+// 订阅者列表
+message SubscriberList {
+  repeated string subscriber_ids = 1;
+}
+message TopicList {
+  repeated string topics = 1;
+}
+// 发布-订阅服务
+service PubSubService {
+  rpc Publish(PublishRequest) returns (google.protobuf.Empty);
+  rpc Subscribe(SubscribeRequest) returns (stream MessageResponse);
+  rpc ListSubscribers(Empty) returns (SubscriberList);
+  rpc ListTopics(Empty) returns (TopicList);
+}
+
+
